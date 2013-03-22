@@ -20,6 +20,11 @@
  * @date Jan 21, 2012
  * @author Pablo F. Alcantarilla
  */
+ 
+ /*!!
+  * Note: the timing functions are replaced by cv::getTickCount() and cv::getTickFrequency()
+  * ( yuhuazou@gmail.com )
+  */
 
 #include "KAZE.h"
 #include "kaze_config.h"

@@ -3,10 +3,22 @@
 
 #include "predep.h"
 
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/calib3d/calib3d.hpp"
+
 #include "KAZE/kaze_features.h"
 
-using namespace cv;
+#pragma comment( lib, cvLIB("core") )
+#pragma comment( lib, cvLIB("imgproc") )
+#pragma comment( lib, cvLIB("highgui") )
+#pragma comment( lib, cvLIB("flann") )
+#pragma comment( lib, cvLIB("features2d") )
+#pragma comment( lib, cvLIB("calib3d") )
+
+
 using namespace std;
+using namespace cv;
 
 
 int main(int argc, char** argv[])
@@ -18,8 +30,8 @@ int main(int argc, char** argv[])
 	Mat descriptors_1, descriptors_2;
 
 	toptions opt;
-	opt.extended = true;
-	opt.verbosity = false;
+	opt.extended = true;		// 1 - 128-bit vector, 0 - 64-bit vector, default: 0
+	opt.verbosity = false;		// 1 - show detail information while caculating KAZE, 0 - unshow, default: 0
 
 	KAZE detector_1(opt);
 	KAZE detector_2(opt);
@@ -102,7 +114,8 @@ int main(int argc, char** argv[])
 		//-- Draw lines between the corners (the mapped object in the scene - image_2 )
 		int npts = scene_corners.size();
 		for (int i=0; i<npts; i++)
-			line( img_matches, scene_corners[i] + Point2f( img_1.cols, 0), scene_corners[(i+1)%npts] + Point2f( img_1.cols, 0), Scalar(0,0,255), 2 );
+			line( img_matches, scene_corners[i] + Point2f( img_1.cols, 0), 
+				scene_corners[(i+1)%npts] + Point2f( img_1.cols, 0), Scalar(0,0,255), 2 );
 	}
 
 	//-- Show detected matches

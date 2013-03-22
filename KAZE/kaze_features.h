@@ -1,6 +1,9 @@
 #ifndef _KAZE_FEATURES_H_
 #define _KAZE_FEATURES_H_
 
+////////////////////////////////////////////////////////////////////
+// Extract from ..\opencv\modules\features2d\src\precomp.hpp
+//
 #ifdef HAVE_CVCONFIG_H
 #include "cvconfig.h"
 #endif
@@ -15,11 +18,15 @@
 #ifdef HAVE_TEGRA_OPTIMIZATION
 #include "opencv2/features2d/features2d_tegra.hpp"
 #endif
+//
+////////////////////////////////////////////////////////////////////
 
 #include "kaze_config.h"
 
 /*!
  KAZE features implementation.
+ !! Note that it has NOT been warped to cv::Algorithm in oder to avoid rebuilding OpenCV
+	So most functions of cv::Algorithm can not be used in cv::KAZE
  http://www.robesafe.com/personal/pablo.alcantarilla/papers/Alcantarilla12eccv.pdf
 */
 namespace cv
@@ -44,7 +51,7 @@ namespace cv
 		// Compute the KAZE features with mask
 		void operator()(InputArray image, InputArray mask, vector<KeyPoint>& keypoints) const;
 
-		// Compute the KAZE features and descriptors on an image without mask
+		// Compute the KAZE features and descriptors on an image WITHOUT mask
 		void operator()(InputArray image, vector<KeyPoint>& keypoints, OutputArray descriptors) const;
 
 		//AlgorithmInfo* info() const;
@@ -63,7 +70,7 @@ namespace cv
 	};
 
 	typedef KAZE KazeFeatureDetector;
-	//typedef KAZE KazeDescriptorExtractor;
+	//typedef KAZE KazeDescriptorExtractor;	// NOT available because KAZE descriptors ONLY work with KAZE features
 }
 
 #endif

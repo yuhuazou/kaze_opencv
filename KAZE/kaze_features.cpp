@@ -33,6 +33,7 @@
 *********************************************************************/
 
 /** Authors: Ievgen Khvedchenia */
+/** Modified: Yuhua Zou, 2013-03-20 */
 
 #include <iterator>
 #include "kaze_features.h"
@@ -182,7 +183,7 @@ namespace cv
             }
         }
 		
-		// Descriptor caculation
+		// Descriptor generation
         if (do_descriptors)
 		{
 			kazeEvolution.Feature_Description(kazePoints);
@@ -214,7 +215,7 @@ namespace cv
 
     void KAZE::computeImpl( const Mat& image, vector<KeyPoint>& keypoints, Mat& descriptors) const
     {
-        (*this)(image, Mat(), keypoints, descriptors, false);
+        (*this)(image, Mat(), keypoints, descriptors, false);		// Regenerate keypoints no matter keypoints is empty or not
     }
 
 }
