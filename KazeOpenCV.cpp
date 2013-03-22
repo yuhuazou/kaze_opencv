@@ -64,9 +64,8 @@ int main(int argc, char** argv[])
 		if( dist > max_dist ) max_dist = dist;
 	}
 
-	//-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist )
-	//-- PS.- radiusMatch can also be used here.
-	vector< DMatch > good_matches;
+	//-- Find initial good matches (i.e. whose distance is less than 2*min_dist )
+	vector< DMatch > good_matches, inliers;
 	for( int i = 0; i < descriptors_1.rows; i++ )
 	{ 
 		if( matches[i].distance < 2*min_dist )	
@@ -75,16 +74,6 @@ int main(int argc, char** argv[])
 		}
 	}
 
-	Mat img_matches;
-	drawMatches( img_1, keypoints_1, img_2, keypoints_2,
-		good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
-		vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
-
-	printf("-- Number of Matches : %d \n", matches.size() );
-	printf("-- Number of Inliers : %d \n", good_matches.size() );
-	printf("-- Match rate : %f \n", good_matches.size() / (float)matches.size() );
-
-	//-- Localize the object
 	cout << "-- Computing homography (RANSAC)..." << endl;
 	//-- Get the keypoints from the good matches
 	vector<Point2f> points1( good_matches.size() ); 
@@ -95,10 +84,29 @@ int main(int argc, char** argv[])
 		points2[i] = keypoints_2[ good_matches[i].trainIdx ].pt;
 	}
 
-	//-- Computing homography (RANSAC)
-	Mat H = findHomography( points1, points2, CV_RANSAC );
+	//-- Computing homography (RANSAC) and find inliers
+	vector<uchar> flags(points1.size(), 0);
+	Mat H = findHomography( points1, points2, CV_RANSAC, 3.0, flags );
 	//cout << H << endl << endl;
+	for (int i = 0; i < good_matches.size(); i++)
+	{
+		if (flags[i])
+		{
+			inliers.push_back( good_matches[i] );
+		}
+	}
 
+	//-- Draw inliers
+	Mat img_matches;
+	drawMatches( img_1, keypoints_1, img_2, keypoints_2,
+		inliers, img_matches, Scalar::all(-1), Scalar::all(-1),
+		vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+
+	printf("-- Number of Matches : %d \n", good_matches.size() );
+	printf("-- Number of Inliers : %d \n", inliers.size() );
+	printf("-- Match rate : %f \n", inliers.size() / (float)good_matches.size() );
+
+	//-- Localize the object
 	//-- Get the corners from the image_1 ( the object to be "detected" )
 	vector<Point2f> obj_corners;
 	obj_corners.push_back( Point2f(0,0) );
