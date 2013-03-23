@@ -31,7 +31,7 @@ int main(int argc, char** argv[])
 
 	toptions opt;
 	opt.extended = true;		// 1 - 128-bit vector, 0 - 64-bit vector, default: 0
-	opt.verbosity = false;		// 1 - show detail information while caculating KAZE, 0 - unshow, default: 0
+	opt.verbosity = true;		// 1 - show detail information while caculating KAZE, 0 - unshow, default: 0
 
 	KAZE detector_1(opt);
 	KAZE detector_2(opt);
@@ -96,6 +96,11 @@ int main(int argc, char** argv[])
 		}
 	}
 
+	//-- Draw Keypoints
+	Mat img_1k, img_2k;
+	drawKeypoints(img_1, keypoints_1, img_1k, Scalar::all(-1), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+	drawKeypoints(img_2, keypoints_2, img_2k, Scalar::all(-1), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
 	//-- Draw inliers
 	Mat img_matches;
 	drawMatches( img_1, keypoints_1, img_2, keypoints_2,
@@ -128,7 +133,11 @@ int main(int argc, char** argv[])
 
 	//-- Show detected matches
 	cout << "-- Show detected matches." << endl;
+	namedWindow("Image 1",CV_WINDOW_NORMAL);
+	namedWindow("Image 2",CV_WINDOW_NORMAL);
 	namedWindow("Good Matches",CV_WINDOW_NORMAL);
+	imshow( "Image 1", img_1k );
+	imshow( "Image 2", img_2k );
 	imshow( "Good Matches", img_matches );
 	waitKey(0);
 	destroyAllWindows();

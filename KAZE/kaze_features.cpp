@@ -166,13 +166,6 @@ namespace cv
 			{
 				runByPixelsMask(kazePoints, _mask.getMat());
 			}
-
-			_keypoints.resize(kazePoints.size());
-			for (size_t i = 0; i < kazePoints.size(); i++)
-			{
-				convertPoint(kazePoints[i], _keypoints[i]);
-			}
-
         }
         else
         {
@@ -194,6 +187,16 @@ namespace cv
             for (size_t i = 0; i < kazePoints.size(); i++)
             {
                 std::copy(kazePoints[i].descriptor.begin(), kazePoints[i].descriptor.end(), (float*)descriptors.row(i).data);
+            }
+        }
+
+		// Transfer from KAZE::Ipoint to cv::KeyPoint
+		if (do_keypoints)
+		{
+			_keypoints.resize(kazePoints.size());
+			for (size_t i = 0; i < kazePoints.size(); i++)
+			{
+				convertPoint(kazePoints[i], _keypoints[i]);
             }
         }
     }

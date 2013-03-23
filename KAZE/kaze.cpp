@@ -175,6 +175,11 @@ int KAZE::Create_Nonlinear_Scale_Space(const cv::Mat &img)
     int64 start_t1 = cv::getTickCount();
 
 	// Copy the original image to the first level of the evolution
+	if( verbosity == true )
+	{
+		std::cout << "-> Perform the Gaussian smoothing." << std::endl;
+	}
+
 	img.copyTo(evolution[0].Lt);
 	Gaussian_2D_Convolution(evolution[0].Lt,evolution[0].Lt,0,0,soffset);
 	Gaussian_2D_Convolution(evolution[0].Lt,evolution[0].Lsmooth,0,0,sderivatives);
@@ -299,10 +304,6 @@ void KAZE::Compute_Multiscale_Derivatives(void)
 	
 	int64 t2 = cv::getTickCount();
 	tmderivatives = 1000.0 * (t2-t1) / cv::getTickFrequency();
-	if( verbosity == true )
-	{
-		std::cout << "--> Computed multiscale derivatives. Execution time (ms): " << tmderivatives << std::endl;
-	}
 
 }
 
@@ -328,7 +329,7 @@ void KAZE::Compute_Detector_Response(void)
 		// Determinant of the Hessian
 		if( verbosity == true )
 		{
-			std::cout << "--> Computing detector response. Evolution time: " << evolution[i].etime << std::endl;
+			std::cout << "--> Computing Hessian determinant. Evolution time: " << evolution[i].etime << std::endl;
 		}
 			
 		for( int ix = 0; ix < img_height; ix++ )
@@ -406,6 +407,8 @@ void KAZE::Feature_Detection(std::vector<Ipoint> &kpts)
 */
 void KAZE::Determinant_Hessian_Parallel(std::vector<Ipoint> &kpts)
 {
+	int64 t1 = cv::getTickCount();
+
 	unsigned int level = 0;
 	float dist = 0.0, smax = 3.0;
 	int npoints = 0, id_repeated = 0;
@@ -436,7 +439,7 @@ void KAZE::Determinant_Hessian_Parallel(std::vector<Ipoint> &kpts)
 	{	
 		if( verbosity == true )
 		{
-			std::cout << "--> Computing Feature Detection. Evolution time: " << evolution[i].etime << std::endl;
+			std::cout << "--> Finding scale space extrema. Evolution time: " << evolution[i].etime << std::endl;
 		}	
 
 		// Create the thread for finding extremum at i scale level
@@ -449,6 +452,11 @@ void KAZE::Determinant_Hessian_Parallel(std::vector<Ipoint> &kpts)
     //mthreads.join_all();
 	
 	// Now fill the vector of keypoints!!!
+	if( verbosity == true )
+	{
+		std::cout << "--> Fill the vector of keypoints. " << std::endl;
+	}	
+
 	for( unsigned int i = 0; i < kpts_par.size(); i++ )
 	{
 		for( unsigned int j = 0; j < kpts_par[i].size(); j++ )
@@ -458,7 +466,7 @@ void KAZE::Determinant_Hessian_Parallel(std::vector<Ipoint> &kpts)
 			is_repeated = false;
 			is_out = false;
 
-			// Check in case we have the same point as maxima in previous evolution levels
+			// Check in case we have the same point as maxima in previous evolution levels (ONLY work when kpts is not empty)
 			for( unsigned int ik = 0; ik < kpts.size(); ik++ )
 			{
 				 if( kpts[ik].level == level || kpts[ik].level == level+1 || kpts[ik].level == level-1 )
@@ -510,6 +518,15 @@ void KAZE::Determinant_Hessian_Parallel(std::vector<Ipoint> &kpts)
 			}
 		}
 	}
+
+	int64 t2 = cv::getTickCount();
+	double thessian  = 1000.0 * (t2-t1) / cv::getTickFrequency();
+
+	if( verbosity == true )
+	{
+		std::cout << "-> Computed Hessian determinant. Execution time (ms):" << thessian << std::endl;
+	}
+
 }
 
 //*************************************************************************************
@@ -593,10 +610,6 @@ void KAZE::Find_Extremum_Threading(int level)
 */
 void KAZE::Do_Subpixel_Refinement(std::vector<Ipoint> &keypts)
 {
-	if( verbosity == true )
-	{
-		std::cout << "-> Subpixel refinement. " << std::endl;
-	}
 
 	float Dx = 0.0, Dy = 0.0, Ds = 0.0, dsc = 0.0;
 	float Dxx = 0.0, Dyy = 0.0, Dss = 0.0, Dxy = 0.0, Dxs = 0.0, Dys = 0.0;
@@ -665,7 +678,8 @@ void KAZE::Do_Subpixel_Refinement(std::vector<Ipoint> &keypts)
 		 cv::solve(A,b,dst,cv::DECOMP_LU);
 
          if( fabs(*(dst.ptr<float>(0))) <= 1.0
-             && fabs(*(dst.ptr<float>(1))) <= 1.0 && fabs(*(dst.ptr<float>(2))) <= 1.0 )
+             && fabs(*(dst.ptr<float>(1))) <= 1.0 
+			 && fabs(*(dst.ptr<float>(2))) <= 1.0 )
 		 {             
              keypts[i].xf += *(dst.ptr<float>(0));
              keypts[i].yf += *(dst.ptr<float>(1));
