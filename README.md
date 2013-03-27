@@ -1,7 +1,7 @@
 ﻿kaze_opencv
 ===========
 
-wrap KAZE features implementation to cv::Feature2D API without rebuilding OpenCV
+wrap KAZE features implementation to cv::Feature2D API without rebuilding OpenCV (minimum version 2.4)
 
 Files:  
 		
