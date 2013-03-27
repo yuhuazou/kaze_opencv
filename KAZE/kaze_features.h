@@ -8,10 +8,20 @@
 #include "cvconfig.h"
 #endif
 
+#include "opencv2/core/version.hpp"
+
+#if ((CV_MAJOR_VERSION>=2) && (CV_MINOR_VERSION>=4)) 
+
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/imgproc/imgproc_c.h"
 #include "opencv2/core/internal.hpp"
+
+#else
+
+#include "Minimum_version_2.4.0_please_upgrade_your_OpenCV"
+
+#endif
 
 #include <algorithm>
 
