@@ -11,11 +11,7 @@
 
 #include "opencv2/core/version.hpp"
 
-#if ((CV_MAJOR_VERSION>=2) && (CV_MINOR_VERSION>=4)) 
-#define CV_VERSION_ID       CVAUX_STR(CV_MAJOR_VERSION) CVAUX_STR(CV_MINOR_VERSION) CVAUX_STR(CV_SUBMINOR_VERSION)
-#else
-#define CV_VERSION_ID "_minimum_version_2.4.0_please_upgrade_your_OpenCV"
-#endif
+#define CV_VERSION_ID CVAUX_STR(CV_MAJOR_VERSION) CVAUX_STR(CV_MINOR_VERSION) CVAUX_STR(CV_SUBMINOR_VERSION)
 
 #ifdef _DEBUG
 #define cvLIB(name) "opencv_" name CV_VERSION_ID "d"
