@@ -10,6 +10,10 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
+
+// !! Please enable /openmp in your project configurations (in /C++/Language) in Visual Studio
+//    If you have installed and included Boost in your project, 
+//    please set 'HAVE_BOOST_THREADING' to 1 to enable Boost-based multi-threading
 #include "KAZE/kaze_features.h"
 
 #pragma comment( lib, cvLIB("core") )
@@ -19,7 +23,8 @@
 #pragma comment( lib, cvLIB("features2d") )
 #pragma comment( lib, cvLIB("calib3d") )
 
-#define USE_SIFT0    // Define 'USE_SIFT' to use SIFT keypoints instead of KAZE for comparation 
+// Define 'USE_SIFT' to use SIFT keypoints instead of KAZE for comparation 
+#define USE_SIFT0    
 
 #ifdef USE_SIFT
 #include "opencv2/nonfree/features2d.hpp"
@@ -130,7 +135,7 @@ void bfMatch( Mat& descriptors_1, Mat& descriptors_2, vector<DMatch>& good_match
         //-- Find initial good matches (i.e. whose distance is less than 2*min_dist )
         for( int i = 0; i < matches.size(); i++ )
         { 
-            if( matches[i].distance < thresh )	
+            if( matches[i].distance < thresh )    
             { 
                 good_matches.push_back( matches[i]); 
             }
@@ -167,7 +172,7 @@ void flannMatch( Mat& descriptors_1, Mat& descriptors_2, vector<DMatch>& good_ma
         //-- Find initial good matches (i.e. whose distance is less than 2*min_dist )
         for( int i = 0; i < matches.size(); i++ )
         { 
-            if( matches[i].distance < thresh )	
+            if( matches[i].distance < thresh )    
             { 
                 good_matches.push_back( matches[i]); 
             }
@@ -385,6 +390,7 @@ int main(int argc, char** argv)
     imshow( "Matches", imgMatches );
 
     waitKey(0);
-	destroyAllWindows();
+    destroyAllWindows();
 
-	return 0;
+    return 0;
+}
