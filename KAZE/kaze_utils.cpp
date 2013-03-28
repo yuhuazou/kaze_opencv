@@ -39,14 +39,14 @@ void Compute_min_32F(const cv::Mat &src, float &value)
    
    for( int i = 0; i < src.rows; i++ )
    {
-	   for( int j = 0; j < src.cols; j++ )
-	   {
-		   if( src.at<float>(i,j) < aux )
-		   {
-			   aux = src.at<float>(i,j);
-		   }
-	   }
-   }	
+       for( int j = 0; j < src.cols; j++ )
+       {
+           if( src.at<float>(i,j) < aux )
+           {
+               aux = src.at<float>(i,j);
+           }
+       }
+   }    
    
    value = aux;
 }
@@ -65,14 +65,14 @@ void Compute_max_32F(const cv::Mat &src, float &value)
 
    for( int i = 0; i < src.rows; i++ )
    {
-	   for( int j = 0; j < src.cols; j++ )
-	   {
-		   if( src.at<float>(i,j) > aux )
-		   {
-			   aux = src.at<float>(i,j);
-		   }
-	   }
-   }	
+       for( int j = 0; j < src.cols; j++ )
+       {
+           if( src.at<float>(i,j) > aux )
+           {
+               aux = src.at<float>(i,j);
+           }
+       }
+   }    
   
    value = aux;
 }
@@ -132,17 +132,17 @@ void Draw_Ipoints(cv::Mat &img, const std::vector<Ipoint> &keypoints)
 {
     int x = 0, y = 0;
     float s = 0.0;
-	
-	for( unsigned int i = 0; i < keypoints.size(); i++ )
-	{
-		x = keypoints[i].x;
-		y = keypoints[i].y;
+    
+    for( unsigned int i = 0; i < keypoints.size(); i++ )
+    {
+        x = keypoints[i].x;
+        y = keypoints[i].y;
         s = keypoints[i].scale*2.0;
-	
-		// Draw a circle centered on the interest point
+    
+        // Draw a circle centered on the interest point
         cv::circle(img,cv::Point(x,y),s,cv::Scalar(255,0,0),1);
         cv::circle(img,cv::Point(x,y),1.0,cv::Scalar(0,255,0),-1);
-	}
+    }
 }
 
 //*************************************************************************************

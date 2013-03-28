@@ -33,7 +33,7 @@
 *********************************************************************/
 
 /** Authors: Ievgen Khvedchenia */
-/** Modified: Yuhua Zou, 2013-03-20 */
+/** Update: 2013-03-28 by Yuhua Zou*/
 
 #include <iterator>
 #include "kaze_features.h"
@@ -46,9 +46,9 @@
 
 namespace cv
 {
-	/***
-	 *	Convertions between cv::Keypoint and KAZE::Ipoint
-	 */
+    /***
+     *    Convertions between cv::Keypoint and KAZE::Ipoint
+     */
     static inline void convertPoint(const cv::KeyPoint& kp, Ipoint& aux)
     {
         aux.xf = kp.pt.x;
@@ -60,7 +60,7 @@ namespace cv
         aux.octave = kp.octave;
 
         // Get the radius for visualization
-        aux.scale = kp.size*.5/2.5;
+        aux.scale = kp.size*.2;    // Updated by Yuhua Zou
         aux.angle = DEGREE_TO_RADIAN(kp.angle);
 
         //aux.descriptor_size = 64;
@@ -75,45 +75,33 @@ namespace cv
         kp.response = src.dresponse;
 
         kp.octave = src.octave;    
-        kp.size = src.scale;
+        kp.size = src.scale*5.0;    // Updated by Yuhua Zou
     }
 
-	/***
-	 *	runByPixelsMask() for KAZE Ipoint
-	 */
-	class MaskPredicate
-	{
-	public:
-		MaskPredicate( const Mat& _mask ) : mask(_mask) {}
-		bool operator() (const Ipoint& key_pt) const
-		{
-			return mask.at<uchar>( (int)(key_pt.yf + 0.5f), (int)(key_pt.xf + 0.5f) ) == 0;
-		}
-
-	private:
-		const Mat mask;
-		MaskPredicate& operator=(const MaskPredicate&);
-	};
-
-	void runByPixelsMask( std::vector<Ipoint>& keypoints, const Mat& mask )
-	{
-		if( mask.empty() )
-			return;
-
-		keypoints.erase(std::remove_if(keypoints.begin(), keypoints.end(), MaskPredicate(mask)), keypoints.end());
-	}
-
-	/***
-	 *	Implementation of cv::KAZE
-	 */
-    KAZE::KAZE()
+    /***
+     *    Implementation of cv::KAZE
+     */
+    KAZE::KAZE( int nfeatures /* = 1000 */, int noctaves /* = 2 */, 
+        int nlevels /* = 4 */, float detectorThreshold /* = 0.001 */, 
+        int diffusivityType /* = 1 */, int descriptorMode /* = 1 */, 
+        bool extendDescriptor /* = false */, bool uprightOrient /* = false */, 
+        bool verbosity /* = false */ )
     {
+        options.nfeatures = nfeatures;
+        options.omax = noctaves;
+        options.nsublevels = nlevels;
+        options.dthreshold = detectorThreshold;
+        options.diffusivity = diffusivityType;
+        options.descriptor = descriptorMode;
+        options.extended = extendDescriptor;
+        options.upright = uprightOrient;
+        options.verbosity = verbosity;
     }
 
-	KAZE::KAZE(toptions &_options)
-	{
-		options = _options;
-	}
+    KAZE::KAZE(toptions &_options)
+    {
+        options = _options;
+    }
 
     int KAZE::descriptorSize() const
     {
@@ -134,52 +122,61 @@ namespace cv
 
         if( (!do_keypoints && !do_descriptors) || _image.empty() )
             return;
-		
+        
         cv::Mat img1_8, img1_32;
 
-		// Convert to gray scale iamge and float image
-		if (_image.getMat().channels() == 3)
-			cv::cvtColor(_image, img1_8, CV_RGB2GRAY);
-		else
-			_image.getMat().copyTo(img1_8);
+        // Convert to gray scale iamge and float image
+        if (_image.getMat().channels() == 3)
+            cv::cvtColor(_image, img1_8, CV_RGB2GRAY);
+        else
+            _image.getMat().copyTo(img1_8);
 
         img1_8.convertTo(img1_32, CV_32F, 1.0/255.0,0);
 
-		// Construct KAZE
-		toptions opt = options;
+        // Construct KAZE
+        toptions opt = options;
         opt.img_width = img1_32.cols;
         opt.img_height = img1_32.rows;
 
         ::KAZE kazeEvolution(opt);
 
-		// Create nonlinear scale space
-        kazeEvolution.Create_Nonlinear_Scale_Space(img1_32);		
+        // Create nonlinear scale space
+        kazeEvolution.Create_Nonlinear_Scale_Space(img1_32);        
 
-		// Feature detection
+        // Feature detection
         std::vector<Ipoint> kazePoints;
 
         if (do_keypoints)
         {
             kazeEvolution.Feature_Detection(kazePoints);
+            filterDuplicated(kazePoints);
 
-			if (!_mask.empty())
-			{
-				runByPixelsMask(kazePoints, _mask.getMat());
-			}
+            if (!_mask.empty())
+            {
+                filterByPixelsMask(kazePoints, _mask.getMat());
+            }
+
+            if (opt.nfeatures > 0)
+            {
+                filterRetainBest(kazePoints, opt.nfeatures);
+            }
+            
         }
         else
         {
             kazePoints.resize(_keypoints.size());
-            for (size_t i = 0; i < kazePoints.size(); i++)
+
+            #pragma omp parallel for
+            for (int i = 0; i < kazePoints.size(); i++)
             {
                 convertPoint(_keypoints[i], kazePoints[i]);    
             }
         }
-		
-		// Descriptor generation
+        
+        // Descriptor caculation
         if (do_descriptors)
-		{
-			kazeEvolution.Feature_Description(kazePoints);
+        {
+            kazeEvolution.Feature_Description(kazePoints);
 
             cv::Mat& descriptors = _descriptors.getMatRef();
             descriptors.create(kazePoints.size(), descriptorSize(), descriptorType());
@@ -190,26 +187,29 @@ namespace cv
             }
         }
 
-		// Transfer from KAZE::Ipoint to cv::KeyPoint
-		if (do_keypoints)
-		{
-			_keypoints.resize(kazePoints.size());
-			for (size_t i = 0; i < kazePoints.size(); i++)
-			{
-				convertPoint(kazePoints[i], _keypoints[i]);
+        // Transfer from KAZE::Ipoint to cv::KeyPoint
+        if (do_keypoints)
+        {
+            _keypoints.resize(kazePoints.size());
+
+            #pragma omp parallel for
+            for (int i = 0; i < kazePoints.size(); i++)
+            {
+                convertPoint(kazePoints[i], _keypoints[i]);
             }
         }
+        
     }
 
-	void KAZE::operator()(InputArray image, InputArray mask, vector<KeyPoint>& keypoints ) const
-	{
-		(*this)(image, mask, keypoints, noArray(), false);
-	}
+    void KAZE::operator()(InputArray image, InputArray mask, vector<KeyPoint>& keypoints ) const
+    {
+        (*this)(image, mask, keypoints, noArray(), false);
+    }
 
-	void KAZE::operator()(InputArray image, vector<KeyPoint>& keypoints, OutputArray descriptors) const
-	{
-		(*this)(image, noArray(), keypoints, descriptors, false);
-	}
+    void KAZE::operator()(InputArray image, vector<KeyPoint>& keypoints, OutputArray descriptors) const
+    {
+        (*this)(image, noArray(), keypoints, descriptors, false);
+    }
 
     void KAZE::detectImpl( const Mat& image, vector<KeyPoint>& keypoints, const Mat& mask) const
     {
@@ -218,7 +218,7 @@ namespace cv
 
     void KAZE::computeImpl( const Mat& image, vector<KeyPoint>& keypoints, Mat& descriptors) const
     {
-        (*this)(image, Mat(), keypoints, descriptors, false);		// Regenerate keypoints no matter keypoints is empty or not
+        (*this)(image, Mat(), keypoints, descriptors, false);
     }
 
 }
