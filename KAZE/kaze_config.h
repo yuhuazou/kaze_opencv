@@ -32,13 +32,13 @@
 
 // Some defines
 #define NMAX_CHAR 400
-#define HAVE_BOOST_THREADING 1 // 1: you have installed and included Boost library, 0: otherwise
+#define HAVE_BOOST_THREADING 0 // 1: you have installed and included Boost library, 0: otherwise
 
 // Options structure
 struct toptions
 {
     float soffset;          // Base scale offset (sigma units), Default: 1.60 
-    int omax;               // Maximum octave evolution of the image 2^sigma (coarsest scale sigma units), Default: 4
+    int omax;               // Maximum octave evolution of the image, Default: 4. If set to 0, omax = log(min(img.rows,img.cols)) / log(2) - 2
     int nsublevels;         // Number of sublevels per scale level, Default: 4
     int img_width;          // Image width
     int img_height;         // Image height

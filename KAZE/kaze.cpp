@@ -98,7 +98,7 @@ KAZE::KAZE(toptions &options)
     tdresponse = 0.0;
     tdescriptor = 0.0;
 
-    // TODO: use adaptive threshold to detect proper number of keypoints
+    omax = options.omax > 0 ? options.omax : cvRound(std::log( (double)std::min( options.img_height, options.img_width ) ) / std::log(2.) - 2);
     //dthreshold = DEFAULT_DETECTOR_THRESHOLD + floorf( img_width/256.0f ) * 0.0015;
 
     // Now allocate memory for the evolution
@@ -2915,11 +2915,11 @@ void KAZE::Thomas(cv::Mat a, cv::Mat b, cv::Mat Ld, cv::Mat x)
    /**    |  :  :  :  : 0  cn-1  an |  | xn | = | dn |                                           */
 
    /** 1. LU decomposition
-   / L = / 1                 \        U = / m1 r1               \
-   /     | l1 1              |            |    m2 r2           |
-   /     |    l2 1          |            |        m3 r3       |
-   /      |     : : :        |            |       :  :  :       |
-   /      \           ln-1 1 /            \                mn /    */
+   / L = / 1                \        U = / m1 r1            \
+   /     | l1 1             |            |    m2 r2          |
+   /     |    l2 1          |            |        m3 r3      |
+   /     |     : : :        |            |       :  :  :     |
+   /     \           ln-1 1 /            \                mn /    */
 
    for( int j = 0; j < m.cols; j++ )
    {

@@ -46,7 +46,7 @@ namespace cv
     {
     public:
 
-        CV_WRAP explicit KAZE( int nfeatures = 1000, int noctaves = 2, int nlevels = 4, float detectorThreshold = 0.001,
+        CV_WRAP explicit KAZE( int nfeatures = 0, int noctaves = 4, int nlevels = 4, float detectorThreshold = 0.001,
             int diffusivityType = 1, int descriptorMode = 1, bool extendDescriptor = false, bool uprightOrient = false, bool verbosity = false );
         
         KAZE(toptions &_options);

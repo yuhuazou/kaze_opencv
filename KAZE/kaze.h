@@ -28,7 +28,7 @@ private:
         // Parameters of the Nonlinear diffusion class
         float soffset;         // Base scale offset
         float sderivatives;    // Standard deviation of the Gaussian for the nonlinear diff. derivatives
-        int omax;              // Maximum octave level
+		int omax;              // Maximum octave level, Default: 4. If set to 0, omax = log(min(img.rows,img.cols)) / log(2) - 2
         int nsublevels;        // Number of sublevels per octave level
         int img_width;         // Width of the original image
         int img_height;        // Height of the original image

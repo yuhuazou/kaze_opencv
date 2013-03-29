@@ -112,7 +112,8 @@ void filterDuplicated( std::vector<Ipoint>& keypoints )
 
         for (j = 0; j < n; j++)
         {
-            if ( (j != i) && ( keypoints[j].level == level || keypoints[j].level == level+1 || keypoints[j].level == level-1 ))
+            if ( (j != i) && (keypoints[j].dresponse == 0) &&
+                ( keypoints[j].level == level || keypoints[j].level == level+1 || keypoints[j].level == level-1 ))
             {                            
                 dist = pow(keypoints[j].xf-keypoints[i].xf,2)+pow(keypoints[j].yf-keypoints[i].yf,2);
                 if( dist < esigma )
