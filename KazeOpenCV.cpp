@@ -13,7 +13,7 @@
 
 // !! Please enable /openmp in your project configurations (in /C++/Language) in Visual Studio
 //    If you have installed and included Boost in your project, 
-//    please set 'HAVE_BOOST_THREADING' to 1 to enable Boost-based multi-threading
+//    please set 'HAVE_BOOST_THREADING' to 1 in ./KAZE/kaze_config.h to enable Boost-based multi-threading
 #include "KAZE/kaze_features.h"
 
 #pragma comment( lib, cvLIB("core") )
