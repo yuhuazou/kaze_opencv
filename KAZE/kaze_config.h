@@ -60,18 +60,18 @@ struct toptions
 
 typedef struct
 {
-    cv::Mat Lx, Ly;         // һ��΢��ͼ����First order spatial derivatives��
-    cv::Mat Lxx, Lxy, Lyy;  // ����΢��ͼ����Second order spatial derivatives��
-    cv::Mat Lflow;          // ����ͼ����Diffusivity image��
-    cv::Mat Lt;             // ����ͼ����Evolution image��
-    cv::Mat Lsmooth;        // ƽ��ͼ����Smoothed image��
-    cv::Mat Lstep;          // �����������¾�����Evolution step update��������ʵ��δ��ʹ�ã�����
-    cv::Mat Ldet;           // ������Ӧ������Detector response��
-    float etime;            // ����ʱ�䣨Evolution time��
-    float esigma;           // �����߶ȣ�Evolution sigma. For linear diffusion t = sigma^2 / 2��
-    float octave;           // ͼ���飨Image octave��
-    float sublevel;         // ͼ���㼶��Image sublevel in each octave��
-    int sigma_size;         // ͼ���߶Ȳ���������ֵ�����ڼ���������Ӧ��Integer esigma. For computing the feature detector responses��
+    cv::Mat Lx, Ly;	        // 一阶微分图像（First order spatial derivatives）
+	cv::Mat Lxx, Lxy, Lyy;	// 二阶微分图像（Second order spatial derivatives）
+	cv::Mat Lflow;	// 传导图像（Diffusivity image）
+	cv::Mat Lt;	    // 进化图像（Evolution image）
+	cv::Mat Lsmooth;// 平滑图像（Smoothed image）
+	cv::Mat Lstep;  // 进化步长更新矩阵（Evolution step update）（！！实际未被使用！！）
+	cv::Mat Ldet;   // 检测响应矩阵（Detector response）
+	float etime;	// 进化时间（Evolution time）
+	float esigma;	// 进化尺度（Evolution sigma. For linear diffusion t = sigma^2 / 2）
+	float octave;	// 图像组（Image octave）
+	float sublevel;	// 图像层级（Image sublevel in each octave）
+	int sigma_size;	// 图像尺度参数的整数值，用于计算检测响应（Integer esigma. For computing the feature detector responses）
 }tevolution;
 
 // Some default options
