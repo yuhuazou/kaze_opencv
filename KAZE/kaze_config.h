@@ -1,4 +1,3 @@
-
 /**
  * @file config.h
  * @brief Configuration file
@@ -32,7 +31,7 @@
 
 // Some defines
 #define NMAX_CHAR 400
-#define HAVE_BOOST_THREADING 1 // 1: you have installed and included Boost library, 0: otherwise
+#define HAVE_BOOST_THREADING 0 // 1: you have installed and included Boost library, 0: otherwise
 
 // Options structure
 struct toptions
@@ -61,18 +60,18 @@ struct toptions
 
 typedef struct
 {
-    cv::Mat Lx, Ly;         // Ò»½×Î¢·ÖÍ¼Ïñ£¨First order spatial derivatives£©
-    cv::Mat Lxx, Lxy, Lyy;  // ¶þ½×Î¢·ÖÍ¼Ïñ£¨Second order spatial derivatives£©
-    cv::Mat Lflow;          // ´«µ¼Í¼Ïñ£¨Diffusivity image£©
-    cv::Mat Lt;             // ½ø»¯Í¼Ïñ£¨Evolution image£©
-    cv::Mat Lsmooth;        // Æ½»¬Í¼Ïñ£¨Smoothed image£©
-    cv::Mat Lstep;          // ½ø»¯²½³¤¸üÐÂ¾ØÕó£¨Evolution step update£©£¨£¡£¡Êµ¼ÊÎ´±»Ê¹ÓÃ£¡£¡£©
-    cv::Mat Ldet;           // ¼ì²âÏìÓ¦¾ØÕó£¨Detector response£©
-    float etime;            // ½ø»¯Ê±¼ä£¨Evolution time£©
-    float esigma;           // ½ø»¯³ß¶È£¨Evolution sigma. For linear diffusion t = sigma^2 / 2£©
-    float octave;           // Í¼Ïñ×é£¨Image octave£©
-    float sublevel;         // Í¼Ïñ²ã¼¶£¨Image sublevel in each octave£©
-    int sigma_size;         // Í¼Ïñ³ß¶È²ÎÊýµÄÕûÊýÖµ£¬ÓÃÓÚ¼ÆËã¼ì²âÏìÓ¦£¨Integer esigma. For computing the feature detector responses£©
+    cv::Mat Lx, Ly;         // Ò»ï¿½ï¿½Î¢ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½First order spatial derivativesï¿½ï¿½
+    cv::Mat Lxx, Lxy, Lyy;  // ï¿½ï¿½ï¿½ï¿½Î¢ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Second order spatial derivativesï¿½ï¿½
+    cv::Mat Lflow;          // ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Diffusivity imageï¿½ï¿½
+    cv::Mat Lt;             // ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Evolution imageï¿½ï¿½
+    cv::Mat Lsmooth;        // Æ½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Smoothed imageï¿½ï¿½
+    cv::Mat Lstep;          // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½ï¿½ï¿½Evolution step updateï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½Î´ï¿½ï¿½Ê¹ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½
+    cv::Mat Ldet;           // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Detector responseï¿½ï¿½
+    float etime;            // ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£¨Evolution timeï¿½ï¿½
+    float esigma;           // ï¿½ï¿½ï¿½ï¿½ï¿½ß¶È£ï¿½Evolution sigma. For linear diffusion t = sigma^2 / 2ï¿½ï¿½
+    float octave;           // Í¼ï¿½ï¿½ï¿½é£¨Image octaveï¿½ï¿½
+    float sublevel;         // Í¼ï¿½ï¿½ï¿½ã¼¶ï¿½ï¿½Image sublevel in each octaveï¿½ï¿½
+    int sigma_size;         // Í¼ï¿½ï¿½ï¿½ß¶È²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Integer esigma. For computing the feature detector responsesï¿½ï¿½
 }tevolution;
 
 // Some default options
