@@ -1,4 +1,3 @@
-
 /**
  * @file config.h
  * @brief Configuration file
@@ -61,18 +60,18 @@ struct toptions
 
 typedef struct
 {
-    cv::Mat Lx, Ly;         // Ò»½×Î¢·ÖÍ¼Ïñ£¨First order spatial derivatives£©
-    cv::Mat Lxx, Lxy, Lyy;  // ¶ş½×Î¢·ÖÍ¼Ïñ£¨Second order spatial derivatives£©
-    cv::Mat Lflow;          // ´«µ¼Í¼Ïñ£¨Diffusivity image£©
-    cv::Mat Lt;             // ½ø»¯Í¼Ïñ£¨Evolution image£©
-    cv::Mat Lsmooth;        // Æ½»¬Í¼Ïñ£¨Smoothed image£©
-    cv::Mat Lstep;          // ½ø»¯²½³¤¸üĞÂ¾ØÕó£¨Evolution step update£©£¨£¡£¡Êµ¼ÊÎ´±»Ê¹ÓÃ£¡£¡£©
-    cv::Mat Ldet;           // ¼ì²âÏìÓ¦¾ØÕó£¨Detector response£©
-    float etime;            // ½ø»¯Ê±¼ä£¨Evolution time£©
-    float esigma;           // ½ø»¯³ß¶È£¨Evolution sigma. For linear diffusion t = sigma^2 / 2£©
-    float octave;           // Í¼Ïñ×é£¨Image octave£©
-    float sublevel;         // Í¼Ïñ²ã¼¶£¨Image sublevel in each octave£©
-    int sigma_size;         // Í¼Ïñ³ß¶È²ÎÊıµÄÕûÊıÖµ£¬ÓÃÓÚ¼ÆËã¼ì²âÏìÓ¦£¨Integer esigma. For computing the feature detector responses£©
+    cv::Mat Lx, Ly;         // ä¸€é˜¶å¾®åˆ†å›¾åƒï¼ˆFirst order spatial derivativesï¼‰
+    cv::Mat Lxx, Lxy, Lyy;  // äºŒé˜¶å¾®åˆ†å›¾åƒï¼ˆSecond order spatial derivativesï¼‰
+    cv::Mat Lflow;   // ä¼ å¯¼å›¾åƒï¼ˆDiffusivity imageï¼‰
+    cv::Mat Lt;      // è¿›åŒ–å›¾åƒï¼ˆEvolution imageï¼‰
+    cv::Mat Lsmooth; // å¹³æ»‘å›¾åƒï¼ˆSmoothed imageï¼‰
+    cv::Mat Lstep;   // è¿›åŒ–æ­¥é•¿æ›´æ–°çŸ©é˜µï¼ˆEvolution step updateï¼‰ï¼ˆï¼ï¼å®é™…æœªè¢«ä½¿ç”¨ï¼ï¼ï¼‰
+    cv::Mat Ldet;    // æ£€æµ‹å“åº”çŸ©é˜µï¼ˆDetector responseï¼‰
+    float etime;     // è¿›åŒ–æ—¶é—´ï¼ˆEvolution timeï¼‰
+    float esigma;    // è¿›åŒ–å°ºåº¦ï¼ˆEvolution sigma. For linear diffusion t = sigma^2 / 2ï¼‰
+    float octave;    // å›¾åƒç»„ï¼ˆImage octaveï¼‰
+    float sublevel;  // å›¾åƒå±‚çº§ï¼ˆImage sublevel in each octaveï¼‰
+    int sigma_size;  // å›¾åƒå°ºåº¦å‚æ•°çš„æ•´æ•°å€¼ï¼Œç”¨äºè®¡ç®—æ£€æµ‹å“åº”ï¼ˆInteger esigma. For computing the feature detector responsesï¼‰
 }tevolution;
 
 // Some default options
