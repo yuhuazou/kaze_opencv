@@ -15,6 +15,7 @@
 // OPENCV Includes
 #include "opencv2/core/core.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/core/utility.hpp"
 
 // System Includes
 #include <stdlib.h>

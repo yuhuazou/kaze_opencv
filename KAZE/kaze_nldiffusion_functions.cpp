@@ -240,7 +240,7 @@ void PM_G1(const cv::Mat &src, cv::Mat &dst, cv::Mat &Lx, cv::Mat &Ly, float k )
         ly = *(Ly.ptr<float>(0)+i);
         lx *= lx;
         ly *= ly;
-        *(dst.ptr<float>(0)+i) = cv::exp( -(lx + ly)/k2 );
+        *(dst.ptr<float>(0)+i) = std::exp( -(lx + ly)/k2 );
     }
 
 }
@@ -305,7 +305,7 @@ void Weickert_Diffusivity(const cv::Mat &src, cv::Mat &dst, cv::Mat &Lx, cv::Mat
         ly2 = *(Ly.ptr<float>(0)+i);
         lx2 *= lx2;
         ly2 *= ly2;
-        modg = cv::pow( (lx2 + ly2)/k2, 4 );
+        modg = std::pow( (lx2 + ly2)/k2, 4 );
         *(dst.ptr<float>(0)+i) = 1.0 - std::exp( -3.315/modg );
     }
 

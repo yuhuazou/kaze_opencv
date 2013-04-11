@@ -67,7 +67,7 @@ namespace cv
         // Compute the KAZE features and descriptors on an image without mask
         void operator()(InputArray image, vector<KeyPoint>& keypoints, OutputArray descriptors) const;
 
-        //AlgorithmInfo* info() const;
+        AlgorithmInfo* info() const;
 
     protected:
 

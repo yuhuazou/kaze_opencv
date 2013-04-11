@@ -25,7 +25,7 @@
  *         changing the way to access matrix elements, etc.
  */
 
-#include "KAZE.h"
+#include "kaze.h"
 #include "kaze_config.h"
 #include <iostream>
 #include <functional>
@@ -3073,7 +3073,7 @@ inline float Get_Angle(float X, float Y)
 inline void Clipping_Descriptor(Ipoint &keypoint, int niter, float ratio)
 {
     int dsize = keypoint.descriptor_size;
-    float cratio = ratio / std::sqrtf(dsize);
+    float cratio = ratio / std::sqrt(dsize);
     float len = 0.0;
 
     for( int i = 0; i < niter; i++ )

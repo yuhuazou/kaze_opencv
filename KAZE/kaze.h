@@ -17,7 +17,7 @@
 #include "kaze_config.h"
 #include "kaze_nldiffusion_functions.h"
 #include "kaze_utils.h"
-#include "kaze_Ipoint.h"
+#include "kaze_ipoint.h"
 
 // KAZE Class Declaration
 class KAZE
